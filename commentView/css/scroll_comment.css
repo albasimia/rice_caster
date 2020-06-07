@@ -1,0 +1,201 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@500;700;800;900&display=swap");
+:root {
+  /* 文字の大きさ */
+  --font-size: 50px;
+  /* 文字の太さ */
+  --font-weight: bolder;
+  /* 配信者の文字の色 */
+  --owner-text-color: #3381ff;
+  /* 視聴者の文字の色 */
+  --audience-text-color: #fff;
+  /* リンクの文字の色 */
+  --link-text-color: #fff;
+  /* 文字の透明度 1〜0で指定 1で不透明、0で透明 */
+  --text-opacity: 1;
+  /*コメントスクロール時間*/
+  --scroll-time: 5s;
+  /*改行の有無 noneで改行なし blockで改行あり*/
+  --br-style: block;
+}
+
+@keyframes slide {
+  0% {
+    transform: translate(100%, 0);
+    left: 120%;
+  }
+  to {
+    transform: translate(-100%, 0);
+    left: -20%;
+  }
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-1800deg);
+  }
+}
+
+@keyframes pop {
+  0% {
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  font-family: "M PLUS 1p", sans-serif;
+  margin: 0;
+  background-color: transparent;
+  text-shadow: 1px 1px 1px black, -1px -1px 1px black;
+}
+
+body #comments,
+body #comments-ue,
+body #comments-shita,
+body #comments-naka {
+  width: 100%;
+  height: 90%;
+}
+
+body #comments-ue,
+body #comments-shita,
+body #comments-naka {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+}
+
+body #comments-shita .commentsCtr {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+}
+
+body #comments-naka {
+  align-items: center;
+}
+
+body .commentWrapper {
+  font-size: var(--font-size);
+  font-weight: var(--font-weight);
+  color: var(--audience-text-color);
+  opacity: var(--text-opacity);
+  animation: slide var(--scroll-time) linear;
+  animation-fill-mode: forwards;
+  width: max-content;
+  position: absolute;
+  left: 100%;
+  will-change: transform, left;
+  backface-visibility: hidden;
+  line-height: 1.2;
+  top: 0;
+}
+
+body .commentWrapper br {
+  display: var(--br-style);
+}
+
+body .commentWrapper .emoji {
+  width: 1em;
+  height: auto;
+  vertical-align: middle;
+}
+
+body .commentWrapper.kona .commentInner {
+  animation: rotation var(--scroll-time) linear;
+}
+
+body .commentWrapper.ue, body .commentWrapper.shita, body .commentWrapper.naka {
+  position: static;
+  display: block;
+  animation-name: pop;
+}
+
+body .commentWrapper.big {
+  font-size: calc(var(--font-size) * 1.5);
+}
+
+body .commentWrapper.small {
+  font-size: calc(var(--font-size) * 0.5);
+}
+
+body .commentWrapper.white {
+  color: #ffffff !important;
+}
+
+body .commentWrapper.red {
+  color: #ff0000 !important;
+}
+
+body .commentWrapper.pink {
+  color: #ff8080 !important;
+}
+
+body .commentWrapper.orange {
+  color: #ffcc00 !important;
+}
+
+body .commentWrapper.yellow {
+  color: #ffff00 !important;
+}
+
+body .commentWrapper.green {
+  color: #00ff00 !important;
+}
+
+body .commentWrapper.cyan {
+  color: #00ffff !important;
+}
+
+body .commentWrapper.blue {
+  color: #0000ff !important;
+}
+
+body .commentWrapper.purple {
+  color: #c000ff !important;
+}
+
+body .commentWrapper.black {
+  color: #000 !important;
+}
+
+body .commentWrapper[data-type="you"] {
+  color: var(--owner-text-color);
+}
+
+body .commentWrapper .name {
+  display: none;
+}
+
+body .commentWrapper.test {
+  animation-name: none;
+  top: 0 !important;
+  left: 0;
+}
+
+body #counter {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-size: 40px;
+  padding: 0 1em;
+  color: #fff;
+}

@@ -1,0 +1,78 @@
+@charset "utf-8";
+
+:root {
+  /* 文字の大きさ */
+  --font-size: 50px;/* 100vhは画面の高さ100% */
+  /* 文字の太さ */
+  --font-weight: bold;
+  /* 配信者の文字の色 */
+  --owner-text-color: #3381ff;
+  /* 視聴者の文字の色 */
+  --audience-text-color: #fff;
+  /* リンクの文字の色 */
+  --link-text-color: #fff;
+  /* 文字の透明度 1〜0で指定 1で不透明、0で透明 */
+  --text-opacity: 1;
+  /*コメントスクロール時間*/
+  --scroll-time: 9s;
+}
+
+@import "module/functions";
+@import "module/keyframes";
+
+body[data-is-embedded="true"] {
+  width: 100vw;
+  height: 100vh;
+  .tw-comment-window-page,
+  .tw-comment-item-body {
+    padding: 0;
+  }
+  .tw-comment-item-comment {
+    font-size: var(--font-size);
+    font-weight: var(--font-weight);
+    color: var(--audience-text-color);
+    opacity: var(--text-opacity);
+    .tw-reply-id {
+      color: var(--audience-text-color);
+    }
+  }
+  .tw-comment-item[data-type="you"] {
+    .tw-comment-item-comment,
+    .tw-reply-id {
+      color: var(--owner-text-color);
+    }
+  }
+
+  a:link,
+  a:visited {
+    color: var(--link-text-color);
+  }
+
+  .tw-comment-list-view__scroller {
+    position: relative;
+    transform: none !important;
+    overflow-x: hidden;
+  }
+
+  .tw-comment-window-page {
+    max-width: none;
+  }
+
+  .tw-comment-item-name {
+    display: none;
+  }
+
+  .tw-comment-item {
+    animation: slide var(--scroll-time) linear;
+    animation-fill-mode: forwards;
+    width: max-content;
+    position: absolute;
+    left: 100%;
+    will-change: transform, left;
+    backface-visibility: hidden;
+    top: 50%;
+    .tw-comment-item-comment {
+      transform: translateY(-50%);
+    }
+  }
+}
