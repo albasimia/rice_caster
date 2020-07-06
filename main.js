@@ -60,9 +60,13 @@ app.on('ready', function () {
 const puppeteer = require('puppeteer');
 
 (async function () {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: false,
+    executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  });
   const page = await browser.newPage();
-  await page.goto('https://twitcasting.tv/black_ape/windowcomment?embedded=1&auth_user_id=black_ape&auth_key=mu89hz0sbz');
+  // await page.goto('https://twitcasting.tv/black_ape/windowcomment?embedded=1&auth_user_id=black_ape&auth_key=mu89hz0sbz');
+  await page.goto('https://twitcasting.tv/black_ape/broadcastertool');
   // await page.screenshot({path: 'example.png'});
   let adddom = await page.evaluate(() => {
     const target = document.querySelector('.tw-comment-list-view__scroller div')
@@ -70,14 +74,23 @@ const puppeteer = require('puppeteer');
       const comment = records[0].addedNodes[0];
       const nameEle = comment.querySelector('.tw-comment-item-name')
       const commentEle = comment.querySelector('.tw-comment-item-comment')
+      const commentUserId = comment.querySelector('.tw-comment-item-screen-id')
+      const itemImage = comment.querySelector('.tw-comment-item-attachment img')
+      // const itemComment = comment.querySelector('.tw-comment-item-comment')
       const resObj = {
+        userId: commentUserId.innerText,
         name: nameEle.innerText,
         dataType: comment.getAttribute('data-type'),
         comment: String(commentEle.innerHTML.replace(/&/g, "&amp;")
           .replace(/"/g, "&quot;")
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")),
-        date: commentEle.getAttribute('title')
+        date: commentEle.getAttribute('title'),
+        itemImage: itemImage ? itemImage.getAttribute('src') : ''
+        // itemImage: String(itemImage.innerHTML.replace(/&/g, "&amp;")
+        // .replace(/"/g, "&quot;")
+        // .replace(/</g, "&lt;")
+        // .replace(/>/g, "&gt;")),
       }
       console.log(JSON.stringify(resObj))
       // console.log(comment.querySelector('.tw-comment-item'))
@@ -88,7 +101,7 @@ const puppeteer = require('puppeteer');
     })
   })
   page.on('console', async (msg) => {
-    // console.log(msg._text)
+    console.log(msg._text)
     // console.log(mainWindow.webContents)
     // mainWindow.webContents.send('ping', 'whoooooooh!')
     io.emit('comment', msg._text);

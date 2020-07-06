@@ -19,10 +19,14 @@ socket.on('comment', (msg) => {
   }
   if (commandArray.indexOf('invisible') == -1) {
     comment = String(comment)
-      .replace(/&amp;nbsp;/g, " ")
-      .replace(/&lt;br/g, "<br")
-      .replace(/&lt;img/g, "<img")
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;span class=&quot;tw-reply-id&quot;&gt;/g, "")
+      .replace(/&lt;\/span&gt;/g, "")
+      .replace(/&nbsp;/g, " ")
+      // .replace(/&lt;br/g, "<br")
+      // .replace(/&amp;lt;img/g, "<img")
       .replace(/&gt;/g, ">")
+      .replace(/&lt;/g, "<")
       .replace(/&quot;/g, '"')
       .replace(/src="/g, 'src="https://twitcasting.tv')
     let top = random = Math.floor(Math.random() * max - min) + min;

@@ -177,7 +177,7 @@ body .commentWrapper.black {
   color: #000 !important;
 }
 
-body .commentWrapper[data-type="you"] {
+body .commentWrapper[data-type="you"], body .commentWrapper[data-type="owner"] {
   color: var(--owner-text-color);
 }
 

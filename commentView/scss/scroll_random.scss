@@ -136,7 +136,8 @@ body {
     &.black {
       color: #000 !important;
     }
-    &[data-type="you"] {
+    &[data-type="you"],
+    &[data-type="owner"] {
       color: var(--owner-text-color);
       // background-color: rgba(255, 224, 49, 0.3);
       // border-radius: .2em;
