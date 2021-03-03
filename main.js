@@ -65,8 +65,8 @@ const puppeteer = require('puppeteer');
     executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   });
   const page = await browser.newPage();
-  // await page.goto('https://twitcasting.tv/black_ape/windowcomment?embedded=1&auth_user_id=black_ape&auth_key=mu89hz0sbz');
-  await page.goto('https://twitcasting.tv/black_ape/broadcastertool');
+  await page.goto('https://twitcasting.tv/black_ape/windowcomment?embedded=1&auth_user_id=black_ape&auth_key=mu89hz0sbz');
+  // await page.goto('https://twitcasting.tv/black_ape/broadcastertool');
   // await page.screenshot({path: 'example.png'});
   let adddom = await page.evaluate(() => {
     const target = document.querySelector('.tw-comment-list-view__scroller div')
