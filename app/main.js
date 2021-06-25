@@ -1,6 +1,8 @@
 const electron = require('electron');
 const url = require('url');
 const path = require('path');
+const pie = require("puppeteer-in-electron");
+const puppeteer = require("puppeteer-core");
 
 // サーバー立ち上げ
 var nodeStatic = require('node-static');
@@ -15,59 +17,49 @@ const server = require('http').createServer(function (request, response) {
 const io = require('socket.io')(server);
 
 
+
 // electron初期化
-const {
-  app,
-  BrowserWindow
-} = electron;
+class App {  constructor(electron) {
+    this.app = electron.app;
+    this.commentView;
+    this.app.on('window-all-closed', function () {
+      if (process.platform !== 'darwin') {
+        this.app.quit();
+      };
+    });
+    this.app.on('ready', function () {
+      const size = electron.screen.getPrimaryDisplay().size
+      this.commentView = new electron.BrowserWindow({
+        width: size.width,
+        height: size.height,
+        transparent: true,
+        frame: false,
+        resizable: false,
+        alwaysOnTop: true,
+      });
+      this.commentView.loadURL('http://localhost:7170/');
+      this.commentView.setIgnoreMouseEvents(true);
+    });
 
-let mainWindow;
+    // this.commentView.on('closed', function () {
+    //   app.quit();
+    // });
+    // this.commentView.webContents.openDevTools()
+  }
+}
+new App(electron);
 
-app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  };
-});
+const main = async () => {
+  await pie.initialize(electron.app);
+  const browser = await pie.connect(electron.app, puppeteer);
 
-app.on('ready', function () {
-  const size = electron.screen.getPrimaryDisplay().size
-  mainWindow = new BrowserWindow({
-    width: size.width,
-    height: size.height,
-    transparent: true,
-    frame: false,
-    resizable: false,
-    alwaysOnTop: true,
-  });
+  const window = new electron.BrowserWindow();
+  const url = "https://twitcasting.tv/black_ape/windowcomment?embedded=1&auth_user_id=black_ape&auth_key=mu89hz0sbz";
+  await window.loadURL(url);
 
-  // mainWindow.webContents.openDevTools()
-  mainWindow.setIgnoreMouseEvents(true)
-  // file://dirname/index.html
-  // mainWindow.loadURL(url.format({
-  //   pathname: path.join(__dirname, 'window/index.html'),
-  //   protocol: 'file',
-  //   slashes: true
-  // }));
-  mainWindow.loadURL('http://localhost:7170/')
+  const page = await pie.getPage(browser, window);
+  // window.destroy();
 
-  mainWindow.on('closed', function () {
-    app.quit();
-  });
-});
-
-
-
-const puppeteer = require('puppeteer');
-
-(async function () {
-  const browser = await puppeteer.launch({
-    headless: false,
-    executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-  });
-  const page = await browser.newPage();
-  await page.goto('https://twitcasting.tv/black_ape/windowcomment?embedded=1&auth_user_id=black_ape&auth_key=mu89hz0sbz');
-  // await page.goto('https://twitcasting.tv/black_ape/broadcastertool');
-  // await page.screenshot({path: 'example.png'});
   let adddom = await page.evaluate(() => {
     const target = document.querySelector('.tw-comment-list-view__scroller div')
     const observer = new MutationObserver(records => {
@@ -101,12 +93,11 @@ const puppeteer = require('puppeteer');
     })
   })
   page.on('console', async (msg) => {
-    console.log(msg._text)
+    // console.log(msg._text)
     // console.log(mainWindow.webContents)
     // mainWindow.webContents.send('ping', 'whoooooooh!')
     io.emit('comment', msg._text);
   })
+};
 
-
-  // await browser.close();
-})();
+main();
