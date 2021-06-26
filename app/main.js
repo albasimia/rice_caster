@@ -69,11 +69,11 @@ const main = async () => {
   const browser = await pie.connect(electron.app, puppeteer);
 
 
-  let view = new electron.BrowserView({
-    webPreferences: {
-      nodeIntegration: false
-    }
-  })
+  // let view = new electron.BrowserView({
+  //   webPreferences: {
+  //     nodeIntegration: false
+  //   }
+  // })
   // commentApp.app.addListener('ready', async function () {
     // commentApp.mainView.setBrowserView(view);
     // view.setBounds({
