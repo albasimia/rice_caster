@@ -1,0 +1,138 @@
+[
+  {
+    "id": "basic",
+    "label": "基本設定",
+    "icon": "single-01",
+    "form": {
+      "groups": [
+        {
+          "label": "基本設定",
+          "fields": [
+            {
+              "label": "コメントURL",
+              "key": "comment_url",
+              "type": "text",
+              "help": "配信ツール向けオーバーレイのURL"
+            },
+            {
+              "label": "port",
+              "key": "port",
+              "type": "text"
+            },
+            {
+              "heading": "Important Message",
+              "content": "<p>The quick brown fox jumps over the long white fence. The quick brown fox jumps over the long white fence. The quick brown fox jumps over the long white fence. The quick brown fox jumps over the long white fence.</p>",
+              "type": "message"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "command",
+    "label": "コマンド設定",
+    "icon": "chat-46",
+    "form": {
+      "groups": [
+        {
+          "label": "コマンド設定",
+          "fields": [
+            {
+              "content": "<p>コマンドの設定をします。</p>",
+              "type": "message"
+            },
+            {
+              "label": "位置コマンド",
+              "key": "position",
+              "type": "checkbox",
+              "options": [
+                {
+                  "label": "ue",
+                  "value": "ue"
+                },
+                {
+                  "label": "shita",
+                  "value": "shita"
+                },
+                {
+                  "label": "naka",
+                  "value": "naka"
+                }
+              ]
+            },
+            {
+              "label": "文字色コマンド",
+              "key": "color",
+              "type": "checkbox",
+              "options": [
+                {
+                  "label": "red",
+                  "value": "red"
+                },
+                {
+                  "label": "pink",
+                  "value": "pink"
+                },
+                {
+                  "label": "orange",
+                  "value": "orange"
+                },
+                {
+                  "label": "yellow",
+                  "value": "yellow"
+                },
+                {
+                  "label": "green",
+                  "value": "green"
+                },
+                {
+                  "label": "cyan",
+                  "value": "cyan"
+                },
+                {
+                  "label": "blue",
+                  "value": "blue"
+                },
+                {
+                  "label": "purple",
+                  "value": "purple"
+                },
+                {
+                  "label": "black",
+                  "value": "black"
+                }
+              ]
+            },
+            {
+              "label": "文字大きさコマンド",
+              "key": "size",
+              "type": "checkbox",
+              "options": [
+                {
+                  "label": "big",
+                  "value": "big"
+                },
+                {
+                  "label": "small",
+                  "value": "small"
+                }
+              ]
+            },
+            {
+              "label": "その他コマンド",
+              "key": "other",
+              "type": "checkbox",
+              "options": [
+                {
+                  "label": "invisible",
+                  "value": "invisible"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

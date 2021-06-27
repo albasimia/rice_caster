@@ -1,0 +1,31 @@
+{
+  "version" : "1.0.0",
+  "basic": {
+    "port": "7170"
+  },
+  "command": {
+    "position": [
+      "ue",
+      "shita",
+      "naka"
+    ],
+    "color": [
+      "red",
+      "pink",
+      "orange",
+      "yellow",
+      "green",
+      "cyan",
+      "blue",
+      "purple",
+      "black"
+    ],
+    "size": [
+      "big",
+      "small"
+    ],
+    "other" : [
+      "invisible"
+    ]
+  }
+}
