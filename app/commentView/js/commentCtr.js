@@ -5,16 +5,23 @@ const commentsArea = document.getElementById('comments')
 const commentsUeArea = document.querySelector('#comments-ue .commentsCtr')
 const commentsShitaArea = document.querySelector('#comments-shita .commentsCtr')
 const commentsNakaArea = document.querySelector('#comments-naka .commentsCtr')
+let preferenses = {};
+let useCommand = [];
+
 socket.on('comment', (msg) => {
   const commentObj = JSON.parse(msg)
-  console.log(commentObj)
   let comment = commentObj.comment
   const command = comment.match(/\[.*\]/g)
   let replacedCommand = ''
   let commandArray = []
   if (command) {
     replacedCommand = String(command).replace(/\[|\]/g, "")
-    commandArray = replacedCommand.split(' ')
+    tempCommandArray = replacedCommand.split(' ')
+    tempCommandArray.forEach(com => {
+      if(useCommand.includes(com)) {
+        commandArray.push(com);
+      }
+    });
     comment = String(comment).replace(/(\[.*\])/g, "")
   }
   if (commandArray.indexOf('invisible') == -1) {
@@ -30,7 +37,7 @@ socket.on('comment', (msg) => {
       .replace(/&quot;/g, '"')
       .replace(/src="/g, 'src="https://twitcasting.tv')
     let top = random = Math.floor(Math.random() * max - min) + min;
-    const commentDomStr = `<div class='commentWrapper ${replacedCommand}' data-type='${commentObj.dataType}'>
+    const commentDomStr = `<div class='commentWrapper ${commandArray.join(' ')}' data-type='${commentObj.dataType}'>
           <div class='commentInner'>
             <div class='name'>${commentObj.name}</div>
             <div class='comment'>${comment}</div>
@@ -58,12 +65,10 @@ socket.on('comment', (msg) => {
       commentsArea.appendChild(commentDom)
     }
     const commentDomHeight = commentDom.scrollHeight
-    console.log((100 - top) / 100 * commentsArea.scrollHeight, commentDomHeight)
+    // console.log((100 - top) / 100 * commentsArea.scrollHeight, commentDomHeight)
     if ((100 - top) / 100 * commentsArea.scrollHeight < commentDomHeight) {
       const deff = commentDomHeight - (100 - top) / 100 * commentsArea.scrollHeight;
       top = top / 100 * commentsArea.scrollHeight - deff
-      // top = 0
-      console.log('test', top)
       if (top < 0) {
         top = 0
       }
@@ -86,4 +91,13 @@ function createElementFromHTML(html) {
 socket.on('disconnect', ()=>{
   console.log('disconnect');
   socket.disconnect();
+})
+
+socket.on('changePreferenses', (pram)=> {
+  preferenses = pram;
+  let coms = [];
+  for (const key in pram.command) {
+    coms = coms.concat(pram.command[key]);
+  }
+  useCommand = coms;
 })

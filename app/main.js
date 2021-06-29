@@ -52,7 +52,7 @@ class App {
       this.mainView.loadURL('file://' + __dirname + '/mainView/index.html');
       mainView = this.mainView;
 
-      this.mainView.on('closed', () =>{
+      this.mainView.on('closed', () => {
         this.quit();
       });
     });
@@ -72,7 +72,7 @@ class App {
     this.commentView.setIgnoreMouseEvents(true);
     commentView = this.commentView;
   }
-  closeOverlay(){
+  closeOverlay() {
     this.commentView.close();
     commentView = null;
   }
@@ -116,6 +116,11 @@ const connect = async () => {
     }).resume();
   }).listen(preferences.value('basic.port'));
   io = require('socket.io')(server);
+
+  // 設定変更を監視
+  // preferences.on('save', (preferences) => {
+  //   io.emit('changePreferenses', preferences);
+  // });
 
   const url = preferences.value('basic.comment_url');
   twicasView = new electron.BrowserWindow({
@@ -162,12 +167,17 @@ const connect = async () => {
   page.on('console', async (msg) => {
     io.emit('comment', msg._text);
   })
+
+  io.on('connection', ()=>{
+    io.emit('changePreferenses', preferences.value());
+  })
+  
   mainView.webContents.send("connected");
 };
 
-const disconnect = () =>{
+const disconnect = () => {
   twicasView.destroy();
-  if(commentView) {
+  if (commentView) {
     commentView.close();
   }
   // TODO:クライアント側でsocketのdiconnect処理
