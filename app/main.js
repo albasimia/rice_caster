@@ -180,7 +180,6 @@ const disconnect = () => {
   if (commentView) {
     commentView.close();
   }
-  // TODO:クライアント側でsocketのdiconnect処理
   io.emit('toDiscconect');
   server.close();
   mainView.webContents.send("disconnected");
