@@ -1,12 +1,14 @@
 const min = 5;
 const max = 95;
 const socket = io();
+const cssTarget = document.querySelector(':root')
 const commentsArea = document.getElementById('comments')
 const commentsUeArea = document.querySelector('#comments-ue .commentsCtr')
 const commentsShitaArea = document.querySelector('#comments-shita .commentsCtr')
 const commentsNakaArea = document.querySelector('#comments-naka .commentsCtr')
 let preferenses = {};
 let useCommand = [];
+let isDisplayName = false;
 
 socket.on('comment', (msg) => {
   const commentObj = JSON.parse(msg)
@@ -18,7 +20,7 @@ socket.on('comment', (msg) => {
     replacedCommand = String(command).replace(/\[|\]/g, "")
     tempCommandArray = replacedCommand.split(' ')
     tempCommandArray.forEach(com => {
-      if(useCommand.includes(com)) {
+      if (useCommand.includes(com)) {
         commandArray.push(com);
       }
     });
@@ -39,7 +41,7 @@ socket.on('comment', (msg) => {
     let top = random = Math.floor(Math.random() * max - min) + min;
     const commentDomStr = `<div class='commentWrapper ${commandArray.join(' ')}' data-type='${commentObj.dataType}'>
           <div class='commentInner'>
-            <div class='name'>${commentObj.name}</div>
+            <div class='name' ${isDisplayName ? 'style="display:block"': ""}>${commentObj.name}</div>
             <div class='comment'>${comment}</div>
           </div>
           </>`
@@ -88,20 +90,55 @@ function createElementFromHTML(html) {
   return tempEl.firstElementChild;
 }
 
-function disconnectSocket(){
+function disconnectSocket() {
   console.log('disconnect');
   socket.disconnect();
 }
 
-socket.on('disconnect', ()=>{
+socket.on('disconnect', () => {
   disconnectSocket();
 })
-socket.on('toDiscconect', ()=>{
+socket.on('toDiscconect', () => {
   disconnectSocket();
 })
 
-socket.on('changePreferenses', (pram)=> {
+socket.on('changePreferenses', (pram) => {
   preferenses = pram;
+
+  console.log(pram)
+  // コメント設定の反映
+  for (const key in pram.comment) {
+    switch (key) {
+      case 'font-size':
+        cssTarget.style.setProperty('--' + key, pram.comment[key] + 'px');
+        break;
+      case 'scroll-time':
+        cssTarget.style.setProperty('--' + key, pram.comment[key] + 's');
+        break;
+      case 'text-opacity':
+        cssTarget.style.setProperty('--' + key, pram.comment[key] / 100);
+        break;
+      case 'display':
+        pram.comment[key].forEach(prop => {
+          switch (prop) {
+            case "br-style":
+              cssTarget.style.setProperty('--' + prop, 'none');
+              break;
+            case "display-name":
+              isDisplayName = true;
+              break;
+            default:
+              break;
+          }
+        });
+        break;
+      default:
+          cssTarget.style.setProperty('--' + key, pram.comment[key]);
+        break;
+    }
+  }
+
+  // コマンド設定の反映
   let coms = [];
   for (const key in pram.command) {
     coms = coms.concat(pram.command[key]);

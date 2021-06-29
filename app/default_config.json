@@ -1,7 +1,15 @@
 {
-  "version" : "1.0.0",
+  "version": "1.0.0",
   "basic": {
     "port": "7170"
+  },
+  "comment": {
+    "font-size": 50,
+    "owner-text-color": "#3381ff",
+    "audience-text-color": "#fff",
+    "link-text-color": "#fff",
+    "text-opacity": 100,
+    "scroll-time": 9
   },
   "command": {
     "position": [
@@ -24,7 +32,7 @@
       "big",
       "small"
     ],
-    "other" : [
+    "other": [
       "invisible"
     ]
   }

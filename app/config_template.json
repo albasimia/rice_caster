@@ -9,20 +9,87 @@
           "label": "基本設定",
           "fields": [
             {
-              "label": "コメントURL",
+              "label": "コメントURL（必須）",
               "key": "comment_url",
               "type": "text",
               "help": "配信ツール向けオーバーレイのURL"
             },
             {
-              "label": "port",
-              "key": "port",
-              "type": "text"
+              "heading": "高度な設定",
+              "content": "<p>基本的にはそのままで大丈夫です。</p>",
+              "type": "message"
             },
             {
-              "heading": "Important Message",
-              "content": "<p>The quick brown fox jumps over the long white fence. The quick brown fox jumps over the long white fence. The quick brown fox jumps over the long white fence. The quick brown fox jumps over the long white fence.</p>",
-              "type": "message"
+              "label": "port（必須）",
+              "key": "port",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "comment",
+    "label": "コメント設定",
+    "icon": "chat-46",
+    "form": {
+      "groups": [
+        {
+          "label": "コメント設定",
+          "fields": [
+            {
+              "label": "文字サイズ",
+              "key": "font-size",
+              "type": "slider",
+              "min": 10,
+              "max": 100
+            },
+            {
+              "label": "配信者の文字の色",
+              "key": "owner-text-color",
+              "type": "color",
+              "format": "hex"
+            },
+            {
+              "label": "視聴者の文字の色",
+              "key": "audience-text-color",
+              "type": "color",
+              "format": "hex"
+            },
+            {
+              "label": "リンクの文字の色",
+              "key": "link-text-color",
+              "type": "color",
+              "format": "hex"
+            },
+            {
+              "label": "文字の不透明度",
+              "key": "text-opacity",
+              "type": "slider",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "label": "コメントスクロール時間",
+              "key": "scroll-time",
+              "type": "slider",
+              "min": 1,
+              "max": 30
+            },
+            {
+              "key": "display",
+              "type": "checkbox",
+              "options": [
+                {
+                  "label": "投稿者名を表示",
+                  "value": "display-name"
+                },
+                {
+                  "label": "改行を許可しない",
+                  "value": "br-style"
+                }
+              ]
             }
           ]
         }
@@ -32,16 +99,12 @@
   {
     "id": "command",
     "label": "コマンド設定",
-    "icon": "chat-46",
+    "icon": "widget",
     "form": {
       "groups": [
         {
           "label": "コマンド設定",
           "fields": [
-            {
-              "content": "<p>コマンドの設定をします。</p>",
-              "type": "message"
-            },
             {
               "label": "位置コマンド",
               "key": "position",

@@ -70,7 +70,7 @@ body {
     left: 100%;
     will-change: transform, left;
     backface-visibility: hidden;
-    line-height: 1.2;
+    line-height: 1;
     // -webkit-text-stroke: 1px #2b2b2b;
     top: 0;
     br {
@@ -145,6 +145,7 @@ body {
       // -webkit-text-stroke: 3px yellowgreen;
     }
     .name {
+      font-size: .5em;
       display: none;
     }
     &.test {
