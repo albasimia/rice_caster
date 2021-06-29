@@ -181,7 +181,7 @@ const disconnect = () => {
     commentView.close();
   }
   // TODO:クライアント側でsocketのdiconnect処理
-  // io.emit('discconect');
+  io.emit('toDiscconect');
   server.close();
   mainView.webContents.send("disconnected");
 }

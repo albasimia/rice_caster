@@ -88,9 +88,16 @@ function createElementFromHTML(html) {
   return tempEl.firstElementChild;
 }
 
-socket.on('disconnect', ()=>{
+function disconnectSocket(){
   console.log('disconnect');
   socket.disconnect();
+}
+
+socket.on('disconnect', ()=>{
+  disconnectSocket();
+})
+socket.on('toDiscconect', ()=>{
+  disconnectSocket();
 })
 
 socket.on('changePreferenses', (pram)=> {
