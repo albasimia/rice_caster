@@ -1,10 +1,8 @@
 const electron = require('electron');
-const url = require('url');
 const path = require('path');
 const pie = require("puppeteer-in-electron");
 const puppeteer = require("puppeteer-core");
 const ElectronPreferences = require('electron-preferences');
-// const preference = require('electron-preference');
 const default_config = require('./default_config.json');
 const config_template = require('./config_template.json');
 
@@ -22,32 +20,24 @@ const preferences = new ElectronPreferences(settings);
 
 // サーバー立ち上げ
 var nodeStatic = require('node-static');
-var file = new nodeStatic.Server(path.join(__dirname, 'commentView/'));
-
-const server = require('http').createServer(function (request, response) {
-  request.addListener('end', function () {
-    file.serve(request, response);
-  }).resume();
-}).listen(preferences.value('basic.port')); //ポートは空いていそうなところで。
-const io = require('socket.io')(server);
-
+const {
+  ipcMain
+} = require('electron');
+const file = new nodeStatic.Server(path.join(__dirname, 'commentView/'));
 
 const winWidth = 500;
 const winHeight = 500;
 
-
-
-
 // electron初期化
 class App {
-  constructor(electron, ElectronPreferences) {
+  constructor(electron) {
     this.app = electron.app;
     this.mainView;
     this.commentView;
     this.preferences;
-    this.app.on('window-all-closed', function () {
+    this.app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') {
-        this.app.quit();
+        this.quit();
       };
     });
     this.app.addListener('ready', function () {
@@ -60,51 +50,85 @@ class App {
         }
       });
       this.mainView.loadURL('file://' + __dirname + '/mainView/index.html');
+      mainView = this.mainView;
 
-      preferences.show();
-
-      // commentView
-      const size = electron.screen.getPrimaryDisplay().size
-      this.commentView = new electron.BrowserWindow({
-        width: size.width,
-        height: size.height,
-        transparent: true,
-        frame: false,
-        resizable: false,
-        alwaysOnTop: true,
+      this.mainView.on('closed', () =>{
+        this.quit();
       });
-      this.commentView.loadURL('http://localhost:7170/');
-      this.commentView.setIgnoreMouseEvents(true);
     });
-
-    // this.commentView.on('closed', function () {
-    //   app.quit();
-    // });
-    // this.commentView.webContents.openDevTools()
+  }
+  openOverlay() {
+    // commentView
+    const size = electron.screen.getPrimaryDisplay().size
+    this.commentView = new electron.BrowserWindow({
+      width: size.width,
+      height: size.height,
+      transparent: true,
+      frame: false,
+      resizable: false,
+      alwaysOnTop: true,
+    });
+    this.commentView.loadURL('http://localhost:' + preferences.value('basic.port'));
+    this.commentView.setIgnoreMouseEvents(true);
+    commentView = this.commentView;
+  }
+  closeOverlay(){
+    this.commentView.close();
+    commentView = null;
   }
 }
 
-const commentApp = new App(electron, ElectronPreferences);
-const main = async () => {
+let mainView;
+let commentView;
+let server;
+let io;
+const commentApp = new App(electron);
+
+// puppeteerの準備
+let browser;
+(async () => {
   await pie.initialize(electron.app);
-  const browser = await pie.connect(electron.app, puppeteer);
+  browser = await pie.connect(electron.app, puppeteer);
+})();
 
+// 関数実行用のリスナー
+ipcMain.on('eval', function (e, arg) {
+  eval(arg + '()');
+});
 
-  // const url = "https://twitcasting.tv/black_ape/windowcomment?embedded=1&auth_user_id=black_ape&auth_key=mu89hz0sbz";
-  const url = preferences.value('basic.url');
-  // await view.webContents.loadURL(url)
-  const window = new electron.BrowserWindow({
+// オーバーレイ用ウインドウを開く
+const openOverlay = () => {
+  commentApp.openOverlay();
+  mainView.webContents.send('overlayOpend');
+}
+const closeOverlay = () => {
+  commentApp.closeOverlay();
+  mainView.webContents.send('overlayClosed');
+}
+
+let twicasView;
+const connect = async () => {
+
+  // サーバー初期化
+  server = require('http').createServer(function (request, response) {
+    request.addListener('end', function () {
+      file.serve(request, response);
+    }).resume();
+  }).listen(preferences.value('basic.port'));
+  io = require('socket.io')(server);
+
+  const url = preferences.value('basic.comment_url');
+  twicasView = new electron.BrowserWindow({
     width: 0,
     height: 0,
     transparent: true,
     frame: false,
     resizable: false,
   });
-  await window.loadURL(url);
+  await twicasView.loadURL(url);
 
-  // const page = await pie.getPage(browser, view);
-  const page = await pie.getPage(browser, window);
-  // window.destroy();
+  // twicasのコメントを取得
+  const page = await pie.getPage(browser, twicasView);
 
   let adddom = await page.evaluate(() => {
     const target = document.querySelector('.tw-comment-list-view__scroller div')
@@ -114,7 +138,6 @@ const main = async () => {
       const commentEle = comment.querySelector('.tw-comment-item-comment')
       const commentUserId = comment.querySelector('.tw-comment-item-screen-id')
       const itemImage = comment.querySelector('.tw-comment-item-attachment img')
-      // const itemComment = comment.querySelector('.tw-comment-item-comment')
       const resObj = {
         userId: commentUserId.innerText,
         name: nameEle.innerText,
@@ -131,21 +154,24 @@ const main = async () => {
         // .replace(/>/g, "&gt;")),
       }
       console.log(JSON.stringify(resObj))
-      // console.log(comment.querySelector('.tw-comment-item'))
-      // console.log(comment)
     })
     observer.observe(target, {
       childList: true
     })
   })
   page.on('console', async (msg) => {
-    // console.log(msg._text)
-    // console.log(mainWindow.webContents)
-    // mainWindow.webContents.send('ping', 'whoooooooh!')
     io.emit('comment', msg._text);
   })
-  // })
-
+  mainView.webContents.send("connected");
 };
 
-// main();
+const disconnect = () =>{
+  twicasView.destroy();
+  if(commentView) {
+    commentView.close();
+  }
+  // TODO:クライアント側でsocketのdiconnect処理
+  // io.emit('discconect');
+  server.close();
+  mainView.webContents.send("disconnected");
+}

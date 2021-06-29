@@ -1,12 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>title</title>
-</head>
-<body>
-  <h1>main</h1>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rice Caster</title>
+    <link rel="stylesheet" href="css/mainView.css" />
+  </head>
+  <body>
+    <div class="container-fluid p-3">
+      <h1>Rice Caster</h1>
+      <row>
+        <p>
+          設定を行ってからコネクトボタンを押してください。<br>
+          ツイキャスからコメントの取得を開始します。
+        </p>
+        <p>
+          コメントオーバーレイを開くと透明なウインドウが開き、<br>
+          投稿されたコメントを表示します。
+        </p>
+      </row>
+      <div class="row mb-3">
+        <div class="d-flex justify-content-end">
+          <div class="btnWrap">
+            <button type="button" class="btn btn-secondary config_btn">設定</button>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-5">
+        <div class="d-flex justify-content-end">
+          <div class="btnWrap">
+            <button type="button" class="btn btn-primary connect_btn" disabled>ツイキャスに接続</button>
+            <button type="button" class="btn btn-danger disconnect_btn d-none">接続解除</button>
+          </div>
+          <div class="btnWrap ms-3">
+            <button type="button" class="btn btn-success open_overlay_btn" disabled>
+              コメントオーバーレイを開く
+            </button>
+            <button type="button" class="btn btn-success d-none close_overlay_btn">
+              コメントオーバーレイを閉じる
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <p>Browser sourceで表示する場合はこのURLをコピー</p>
+        <div class="input-group">
+          <input id="copyTarget" class="form-control" type="text" value="localhost:7170" readonly />
+          <button class="btn btn-secondary copy_btn">Copy</button>
+        </div>
+      </div>
+    </div>
+    <script src="./js/mainVIew.js"></script>
+  </body>
 </html>

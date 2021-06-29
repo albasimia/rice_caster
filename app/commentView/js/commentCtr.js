@@ -82,3 +82,8 @@ function createElementFromHTML(html) {
   tempEl.innerHTML = html;
   return tempEl.firstElementChild;
 }
+
+socket.on('disconnect', ()=>{
+  console.log('disconnect');
+  socket.disconnect();
+})
