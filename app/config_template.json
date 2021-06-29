@@ -39,7 +39,7 @@
           "label": "コメント設定",
           "fields": [
             {
-              "label": "文字サイズ",
+              "label": "文字サイズ（px）",
               "key": "font-size",
               "type": "slider",
               "min": 10,
@@ -64,14 +64,14 @@
               "format": "hex"
             },
             {
-              "label": "文字の不透明度",
+              "label": "文字の不透明度（%）",
               "key": "text-opacity",
               "type": "slider",
               "min": 0,
               "max": 100
             },
             {
-              "label": "コメントスクロール時間",
+              "label": "コメントスクロール時間（秒）",
               "key": "scroll-time",
               "type": "slider",
               "min": 1,
