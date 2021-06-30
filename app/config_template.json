@@ -130,6 +130,10 @@
               "type": "checkbox",
               "options": [
                 {
+                  "label": "white",
+                  "value": "white"
+                },
+                {
                   "label": "red",
                   "value": "red"
                 },

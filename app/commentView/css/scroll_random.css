@@ -97,7 +97,6 @@ body .commentWrapper {
   font-size: var(--font-size);
   font-weight: var(--font-weight);
   color: var(--audience-text-color);
-  opacity: var(--text-opacity);
   animation: slide var(--scroll-time) linear;
   animation-fill-mode: forwards;
   width: max-content;
@@ -107,6 +106,10 @@ body .commentWrapper {
   backface-visibility: hidden;
   line-height: 1;
   top: 0;
+}
+
+body .commentWrapper .commentInner {
+  opacity: var(--text-opacity);
 }
 
 body .commentWrapper br {
@@ -182,7 +185,7 @@ body .commentWrapper[data-type="you"], body .commentWrapper[data-type="owner"] {
 }
 
 body .commentWrapper .name {
-  font-size: .5em;
+  font-size: 0.5em;
   display: none;
 }
 

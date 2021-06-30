@@ -62,7 +62,6 @@ body {
     font-size: var(--font-size);
     font-weight: var(--font-weight);
     color: var(--audience-text-color);
-    opacity: var(--text-opacity);
     animation: slide var(--scroll-time) linear;
     animation-fill-mode: forwards;
     width: max-content;
@@ -73,6 +72,10 @@ body {
     line-height: 1;
     // -webkit-text-stroke: 1px #2b2b2b;
     top: 0;
+    .commentInner {
+      opacity: var(--text-opacity);
+    }
+
     br {
       display: var(--br-style);
     }
@@ -94,11 +97,11 @@ body {
       animation-name: pop;
     }
     // &.naka {
-      // top: 50% !important;
-      // left: 50%;
-      // transform: translate(-50%, -50%);
-      // animation-name: pop;
-      // text-align: center;
+    // top: 50% !important;
+    // left: 50%;
+    // transform: translate(-50%, -50%);
+    // animation-name: pop;
+    // text-align: center;
     // }
     &.big {
       font-size: calc(var(--font-size) * 1.5);
@@ -145,7 +148,7 @@ body {
       // -webkit-text-stroke: 3px yellowgreen;
     }
     .name {
-      font-size: .5em;
+      font-size: 0.5em;
       display: none;
     }
     &.test {
