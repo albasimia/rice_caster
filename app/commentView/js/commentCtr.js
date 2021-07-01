@@ -145,3 +145,8 @@ socket.on('changePreferenses', (pram) => {
   }
   useCommand = coms;
 })
+
+socket.on('ping', () => {
+  console.log('ping');
+  socket.emit('pong');
+})

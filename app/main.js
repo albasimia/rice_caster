@@ -44,6 +44,7 @@ class App {
       this.mainView = new electron.BrowserWindow({
         width: winWidth,
         height: winHeight,
+        useContentSize: true,
         webPreferences: {
           nodeIntegration: true,
           contextIsolation: false,
@@ -67,6 +68,7 @@ class App {
       frame: false,
       resizable: false,
       alwaysOnTop: true,
+      useContentSize: true,
     });
     this.commentView.loadURL('http://localhost:' + preferences.value('basic.port'));
     this.commentView.setIgnoreMouseEvents(true);
@@ -107,6 +109,7 @@ const closeOverlay = () => {
 }
 
 let twicasView;
+let pingSender;
 const connect = async () => {
 
   // サーバー初期化
@@ -168,8 +171,19 @@ const connect = async () => {
     io.emit('comment', msg._text);
   })
 
-  io.on('connection', ()=>{
+  io.on('connection', (socket)=>{
     io.emit('changePreferenses', preferences.value());
+    socket.on("disconnect", (reason) => {
+      console.log({"disconect": reason})
+    });
+
+    // 接続を維持
+    pingSender = setInterval( function() {
+      io.emit( "ping" );
+    }, 30000);
+    // socket.on('pong', ()=>{
+    //   console.log('pong');
+    // })
   })
   
   mainView.webContents.send("connected");
@@ -180,6 +194,7 @@ const disconnect = () => {
   if (commentView) {
     commentView.close();
   }
+  clearInterval(pingSender);
   io.emit('toDiscconect');
   server.close();
   mainView.webContents.send("disconnected");
