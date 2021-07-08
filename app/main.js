@@ -39,11 +39,11 @@ class App {
     this.app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') {
         this.quit();
-        log.info('quite')
+        log.info('app quit ----------------------------------------')
       };
     });
     this.app.addListener('ready', function () {
-      log.info('app ready')
+      log.info('app ready ----------------------------------------')
       try{
       this.mainView = new electron.BrowserWindow({
         width: winWidth,
@@ -59,7 +59,7 @@ class App {
 
       this.mainView.on('closed', () => {
         this.quit();
-        log.info('quite')
+        log.info('app quit ----------------------------------------')
         
       });
     }catch(error){
@@ -86,6 +86,7 @@ class App {
     this.commentView.on('closed', () => {
       log.info('commentView closed')
       mainView.webContents.send('overlayClosed');
+      commentView = null;
     });
     commentView = this.commentView;
   }
