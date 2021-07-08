@@ -7,9 +7,9 @@
     <title>Rice Caster</title>
     <link rel="stylesheet" href="css/mainView.css" />
   </head>
-  <body>
+  <body class="">
     <div class="container-fluid p-3">
-      <h1>Rice Caster</h1>
+      <h1>Rice Caster(β)</h1>
       <row>
         <p class="mb-1">
           設定を行ってからコネクトボタンを押してください。<br>
@@ -46,14 +46,20 @@
           </div>
         </div>
       </div>
-      <div class="row mb-3">
+      <div class="row mb-3 position-relative">
         <p>Browser sourceで表示する場合はこのURLをコピー</p>
         <div class="input-group">
           <input id="copyTarget" class="form-control" type="text" value="localhost:7170" readonly />
           <button class="btn btn-secondary copy_btn">Copy</button>
         </div>
+        <div class="toast d-flex align-items-center text-white bg-success border-0 position-absolute start-50 translate-middle" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-body">
+            コピーしました。
+          </div>
+          <button type="button" class="btn-close btn-close-white ms-auto me-2" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
       </div>
-    </div>
+      </div>
     <script src="./js/mainVIew.js"></script>
   </body>
 </html>

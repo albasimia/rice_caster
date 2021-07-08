@@ -5,6 +5,7 @@ const {
 
 // Fetch the preferences object
 const preferences = ipcRenderer.sendSync('getPreferences');
+const Toast = require('bootstrap/js/dist/toast')
 let isConnect = false;
 
 // btn
@@ -63,7 +64,14 @@ ipcRenderer.on('disconnected', (e, preferences) => {
   disconnect_btn.classList.add('d-none');
 });
 
-copy_btn.addEventListener('click', copyToClipboard());
+
+ipcRenderer.on('overlayClosed', (e) => {
+  open_overlay_btn.disabled = false;
+  open_overlay_btn.classList.remove('d-none');
+  close_overlay_btn.classList.add('d-none');
+});
+
+copy_btn.addEventListener('click', copyToClipboard);
 
 function checkPram(params) {
   connect_btn.disabled = params.basic.comment_url ? false : true;
@@ -79,4 +87,14 @@ function copyToClipboard() {
 
   // 選択しているテキストをクリップボードにコピーする
   document.execCommand("Copy");
+  toastList[0].show();
 }
+
+var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+const option = {
+  option : 500
+}
+var toastList = toastElList.map(function (toastEl) {
+  return new Toast(toastEl, option)
+})
+console.log(toastList)
