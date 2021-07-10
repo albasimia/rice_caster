@@ -36,12 +36,12 @@ class App {
     this.mainView;
     this.commentView;
     this.preferences;
-    this.app.on('window-all-closed', () => {
-      if (process.platform !== 'darwin') {
-        this.quit();
-        log.info('app quit ----------------------------------------')
-      };
-    });
+    // this.app.on('window-all-closed', () => {
+    //   if (process.platform !== 'darwin') {
+    //     this.quit();
+    //     log.info('app quit ----------------------------------------')
+    //   };
+    // });
     this.app.addListener('ready', function () {
       log.info('app ready ----------------------------------------')
       try{
@@ -58,8 +58,9 @@ class App {
       mainView = this.mainView;
 
       this.mainView.on('closed', () => {
-        this.quit();
         log.info('app quit ----------------------------------------')
+        this.quit();
+        mainView = null;
         
       });
     }catch(error){
@@ -85,13 +86,23 @@ class App {
 
     this.commentView.on('closed', () => {
       log.info('commentView closed')
-      mainView.webContents.send('overlayClosed');
+      try{
+        if(mainView){
+          mainView.webContents.send('overlayClosed');
+        }
+      }catch (error){
+        log.error(error)
+      }
       commentView = null;
     });
     commentView = this.commentView;
   }
   closeOverlay() {
-    this.commentView.close();
+    try{
+      this.commentView.close();
+    }catch(error){
+      log.error(error)
+    }
     commentView = null;
   }
 }
@@ -219,13 +230,17 @@ const connect = async () => {
 };
 
 const disconnect = () => {
-  log.info('Intentional disconnection')
-  twicasView.destroy();
-  if (commentView) {
-    commentView.close();
+  try {
+    log.info('Intentional disconnection')
+    twicasView.destroy();
+    if (commentView) {
+      commentView.close();
+    }
+    clearInterval(pingSender);
+    io.emit('toDiscconect');
+    server.close();
+    mainView.webContents.send("disconnected");
+  }catch(error){
+    log.error(error)
   }
-  clearInterval(pingSender);
-  io.emit('toDiscconect');
-  server.close();
-  mainView.webContents.send("disconnected");
 }
